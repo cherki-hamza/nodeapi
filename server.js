@@ -12,17 +12,18 @@ mongoose.connect('mongodb+srv://hamza:W3XUhG2J0hBbzo9S@clusterhpac.8a0ma.mongodb
 });
 
 const smsSchema = new mongoose.Schema({
-  address: String,
-  body: String,
-  date: Date,
+  address: String, // address
+  name: String,  // Contact name
+  body: String,  // SMS body
+  date: Date,    // SMS date
 });
 
 const Sms = mongoose.model('Sms', smsSchema);
 
 app.post('/api/receive-sms', async (req, res) => {
-  const { address, body, date } = req.body;
+  const { address, name, body, date } = req.body;
   try {
-    const newSms = new Sms({ address, body, date });
+    const newSms = new Sms({ address, name, body, date });
     await newSms.save();
     res.status(200).send('SMS saved');
   } catch (error) {
