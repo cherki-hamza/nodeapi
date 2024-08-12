@@ -19,7 +19,7 @@ const smsSchema = new mongoose.Schema({
 
 const Sms = mongoose.model('Sms', smsSchema);
 
-app.post('/receive-sms', async (req, res) => {
+app.post('/api/receive-sms', async (req, res) => {
   const { address, body, date } = req.body;
   try {
     const newSms = new Sms({ address, body, date });
@@ -30,7 +30,7 @@ app.post('/receive-sms', async (req, res) => {
   }
 });
 
-app.get('/dev', async (req, res) => {
+app.get('/api/dev', async (req, res) => {
     res.status(200).send('welcome to node js');
 });
 
