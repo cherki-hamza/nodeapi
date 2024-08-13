@@ -49,6 +49,30 @@ app.post('/api/receive-sms', async (req, res) => {
   }
 });
 
+// Get SMS by query parameters
+// Get SMS by query parameters and return count
+app.get('/api/get_sms', async (req, res) => {
+  const { address, name, date } = req.query;
+  const query = {};
+
+  if (address) query.address = address;
+  if (name) query.name = name;
+  if (date) query.date = new Date(date);
+
+  try {
+    const smsList = await Sms.find(query);
+    const smsCount = await Sms.countDocuments(query);
+
+    res.status(200).json({
+      count: smsCount,
+      messages: smsList,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching SMS' });
+  }
+});
+
 app.get('/api/dev', async (req, res) => {
     res.status(200).send('welcome to node js');
 });
