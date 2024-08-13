@@ -20,13 +20,31 @@ const smsSchema = new mongoose.Schema({
 
 const Sms = mongoose.model('Sms', smsSchema);
 
+// Check if SMS already exists
+app.post('/api/check-sms-exists', async (req, res) => {
+  const { address, body, date } = req.body;
+  try {
+    const existingSms = await Sms.findOne({ address, body, date });
+    if (existingSms) {
+      return res.status(200).json({ exists: true });
+    } else {
+      return res.status(200).json({ exists: false });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Error checking SMS' });
+  }
+});
+
+// Save new SMS
 app.post('/api/receive-sms', async (req, res) => {
   const { address, name, body, date } = req.body;
   try {
     const newSms = new Sms({ address, name, body, date });
     await newSms.save();
-    res.status(200).send('SMS saved');
+    res.status(200).send('SMS saved to MongoDB');
   } catch (error) {
+    console.error(error);
     res.status(500).send('Error saving SMS');
   }
 });
