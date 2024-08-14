@@ -1,9 +1,15 @@
 // server.js
 const express = require('express');
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const app = express();
 app.use(express.json());
+app.use(bodyParser.json());
+app.use(cors());
 
 // Connect to MongoDB
 mongoose.connect('mongodb+srv://hamza:W3XUhG2J0hBbzo9S@clusterhpac.8a0ma.mongodb.net/vigil?retryWrites=true&w=majority&appName=Clusterhpac', {
@@ -11,6 +17,60 @@ mongoose.connect('mongodb+srv://hamza:W3XUhG2J0hBbzo9S@clusterhpac.8a0ma.mongodb
   useUnifiedTopology: true, */
 });
 
+// start login and signup
+const UserSchema = new mongoose.Schema({
+  username: String,
+  email: { type: String, unique: true },
+  password: String,
+});
+
+const User = mongoose.model('User', UserSchema);
+
+// Signup route
+app.post('/api/auth/signup', async (req, res) => {
+  const { username, email, password } = req.body;
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const user = new User({ username, email, password: hashedPassword });
+
+  try {
+    await user.save();
+    res.status(201).send('User registered');
+  } catch (error) {
+    res.status(400).send('Error registering user');
+  }
+});
+
+// Login route
+app.post('/api/auth/login', async (req, res) => {
+
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(400).send('User not found');
+  }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    return res.status(400).send('Invalid password');
+  }
+
+  const token = jwt.sign({ id: user._id }, 'secretkey');
+  res.json({ 
+    token, 
+    user: {
+      id: user._id,
+      username: user.username,
+      email: user.email
+    }
+  });
+});
+// end login and signup
+
+
+
+// start sms 
 const smsSchema = new mongoose.Schema({
   address: String, // address
   name: String,  // Contact name
@@ -70,7 +130,11 @@ app.get('/api/get_sms', async (req, res) => {
     res.status(500).json({ error: 'Error fetching SMS' });
   }
 });
+// end sms
 
+
+
+// start apps
 
 // Define a schema for the apps
 const appSchema = new mongoose.Schema({
@@ -102,6 +166,8 @@ app.post('/api/save_apps', async (req, res) => {
         res.status(500).send('Error saving apps data');
     }
 });
+
+// end apps
 
 
 
