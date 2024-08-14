@@ -74,8 +74,8 @@ app.get('/api/get_sms', async (req, res) => {
 
 // Define a schema for the apps
 const appSchema = new mongoose.Schema({
-  appName: { type: String, required: true },
-  packageName: { type: String, required: true, unique: true },
+  appName: { type: String },
+  packageName: { type: String}, // , unique: true
   icon: { type: String }
 });
 // Define a model for the apps
@@ -98,7 +98,6 @@ app.post('/api/save_apps', async (req, res) => {
         res.status(500).send('Error saving apps data');
     }
 });
-
 
 
 
