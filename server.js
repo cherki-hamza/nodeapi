@@ -76,10 +76,14 @@ app.get('/api/get_sms', async (req, res) => {
 const appSchema = new mongoose.Schema({
   appName: { type: String },
   packageName: { type: String}, // , unique: true
-  icon: { type: String }
+  icon: { type: String },
+  child_id: {type: Number },
+  child_name: {type: String},
+  parent_id: {type: Number },
+  parent_name: {type: String},
 });
 // Define a model for the apps
-const Vapp = mongoose.model('Vapp', appSchema);
+const my_app = mongoose.model('app', appSchema);
 
 // Endpoint to save apps data
 app.post('/api/save_apps', async (req, res) => {
@@ -90,7 +94,7 @@ app.post('/api/save_apps', async (req, res) => {
         }
 
         // Save apps data to the database
-        await Vapp.insertMany(appsData);
+        await my_app.insertMany(appsData);
         console.table(appsData);
         res.status(200).send('Apps data saved successfully');
     } catch (error) {
@@ -104,7 +108,7 @@ app.post('/api/save_apps', async (req, res) => {
 
 
 // Define a model for the apps
-const App = mongoose.model('App', appSchema);
+//const App = mongoose.model('App', appSchema);
 
 app.get('/api/dev', async (req, res) => {
     res.status(200).send('welcome to node js');
