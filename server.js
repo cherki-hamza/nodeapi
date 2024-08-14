@@ -17,7 +17,6 @@ const smsSchema = new mongoose.Schema({
   body: String,  // SMS body
   date: Date,    // SMS date
 });
-
 const Sms = mongoose.model('Sms', smsSchema);
 
 // Check if SMS already exists
@@ -49,8 +48,7 @@ app.post('/api/receive-sms', async (req, res) => {
   }
 });
 
-// Get SMS by query parameters
-// Get SMS by query parameters and return count
+// Get SMS by query parameters and return also the count of sms
 app.get('/api/get_sms', async (req, res) => {
   const { address, name, date } = req.query;
   const query = {};
@@ -72,6 +70,42 @@ app.get('/api/get_sms', async (req, res) => {
     res.status(500).json({ error: 'Error fetching SMS' });
   }
 });
+
+
+// Define a schema for the apps
+const appSchema = new mongoose.Schema({
+  appName: { type: String, required: true },
+  packageName: { type: String, required: true, unique: true },
+  icon: { type: String }
+});
+// Define a model for the apps
+const Vapp = mongoose.model('Vapp', appSchema);
+
+// Endpoint to save apps data
+app.post('/api/save_apps', async (req, res) => {
+    try {
+        const appsData = req.body.apps;
+        if (!Array.isArray(appsData)) {
+            return res.status(400).send('Invalid data format');
+        }
+
+        // Save apps data to the database
+        await Vapp.insertMany(appsData);
+        console.table(appsData);
+        res.status(200).send('Apps data saved successfully');
+    } catch (error) {
+        console.error('Error saving apps data:', error);
+        res.status(500).send('Error saving apps data');
+    }
+});
+
+
+
+
+
+
+// Define a model for the apps
+const App = mongoose.model('App', appSchema);
 
 app.get('/api/dev', async (req, res) => {
     res.status(200).send('welcome to node js');
