@@ -22,6 +22,9 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/sms', require('./routes/smsRoutes'));
 // route for APPS Services
 app.use('/api/apps', require('./routes/appRoutes'));
+// route for store files
+app.use('/api/files', require('./routes/fileRoutes'));
+
 
 // Default route for testing
 app.get('/api/dev', (req, res) => {
