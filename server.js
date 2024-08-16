@@ -25,6 +25,9 @@ app.use('/api/apps', require('./routes/appRoutes'));
 // route for store files
 app.use('/api/files', require('./routes/fileRoutes'));
 
+// Store and GET all call logs 
+app.use('/api/logs', require('./routes/callLogRoutes'));
+
 
 // Default route for testing
 app.get('/api/dev', (req, res) => {
