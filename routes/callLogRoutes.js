@@ -7,4 +7,3 @@ router.post('/calllogs', addCallLogs);
 router.get('/calllogs', getCallLogs);
 
 module.exports = router;
-
