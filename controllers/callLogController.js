@@ -31,21 +31,34 @@ exports.getCallLogs = async (req, res) => {
 // method for check the existing call logs
 exports.checkCallLog = async (req, res) => {
   try {
-    const { name, number, timestamp } = req.query;
+    const logs = req.body.logs;
 
-    if (!name || !number || !timestamp) {
-      return res.status(400).json({ error: 'Missing required query parameters: name, number, timestamp' });
+    if (!logs || !Array.isArray(logs)) {
+      return res.status(400).json({ error: 'Invalid request format. Expected an array of logs in the body.' });
     }
 
-    const existingLog = await CallLog.findOne({ name, number, timestamp });
+    const timestamps = logs.map(log => log.timestamp);
+    const numbers = logs.map(log => log.number);
 
-    if (existingLog) {
-      return res.status(200).json({ exists: true, log: existingLog });
-    } else {
-      return res.status(404).json({ exists: false });
-    }
+    // Find all logs that match any of the provided timestamps and numbers
+    const existingLogs = await CallLog.find({
+      timestamp: { $in: timestamps },
+      number: { $in: numbers }
+    });
+
+    // Filter out logs that already exist
+    const uniqueLogs = logs.filter(log => {
+      return !existingLogs.some(existingLog => 
+        existingLog.number === log.number && 
+        existingLog.timestamp === log.timestamp
+      );
+    });
+
+    // Return the unique logs
+    return res.status(200).json(uniqueLogs);
+
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Failed to check call log' });
+    res.status(500).json({ error: 'Failed to check call logs' });
   }
 };
