@@ -37,19 +37,21 @@ exports.checkCallLog = async (req, res) => {
       return res.status(400).json({ error: 'Invalid request format. Expected an array of logs in the body.' });
     }
 
-    const timestamps = logs.map(log => log.timestamp);
-    const numbers = logs.map(log => log.number);
+    // Extract numbers and timestamps from the logs
+    const logConditions = logs.map(log => ({
+      number: log.number,
+      timestamp: log.timestamp
+    }));
 
-    // Find all logs that match any of the provided timestamps and numbers
+    // Find logs that match any of the provided numbers and timestamps
     const existingLogs = await CallLog.find({
-      timestamp: { $in: timestamps },
-      number: { $in: numbers }
+      $or: logConditions
     });
 
-    // Filter out logs that already exist
+    // Filter out logs that already exist in the database
     const uniqueLogs = logs.filter(log => {
       return !existingLogs.some(existingLog => 
-        existingLog.number === log.number && 
+        existingLog.number === log.number &&
         existingLog.timestamp === log.timestamp
       );
     });
@@ -59,6 +61,6 @@ exports.checkCallLog = async (req, res) => {
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Failed to check call logs' });
+    return res.status(500).json({ error: 'Failed to check call logs' });
   }
 };
