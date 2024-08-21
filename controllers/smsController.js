@@ -1,5 +1,48 @@
 const Sms = require('../models/Sms');
 
+// method for store sms without duplicate 
+exports.storeSms = async (req,res) => {
+   
+  try {
+    const smsList = req.body; // Assume req.body is an array of SMS objects
+
+    let savedSmsCount = 0;
+    let duplicateSmsCount = 0;
+
+    // Loop through each SMS message in the list
+    for (let sms of smsList) {
+      const { address, body, date } = sms;
+
+      // Check if the SMS already exists in the database
+      const existingSms = await Sms.findOne({ address, body, date });
+
+      if (existingSms) {
+        duplicateSmsCount++;
+        continue; // Skip storing this SMS if it's a duplicate
+      }
+
+      // Create a new SMS document
+      const newSms = new Sms({
+        address,
+        body,
+        date,
+      });
+
+      // Save the SMS document to the database
+      await newSms.save();
+      savedSmsCount++;
+    }
+
+    res.status(201).json({
+      message: `Processed ${smsList.length} SMS messages. Stored ${savedSmsCount} new messages, skipped ${duplicateSmsCount} duplicates.`,
+    });
+  } catch (error) {
+    console.error('Error storing SMS:', error);
+    res.status(500).json({ message: 'Server error', error });
+  }
+
+};
+
 exports.checkSmsExists = async (req, res) => {
   const { address, body, date } = req.body;
 
