@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 
 const smsSchema = new mongoose.Schema({
   address: String,
-  name: String,
   body: String,
   date: Date,
 });
