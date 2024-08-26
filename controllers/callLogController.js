@@ -3,32 +3,46 @@ const CallLog = require('../models/CallLog');
 
 // lst method call logs for save in db with check if there is exist call logs
 exports.storeCallLogs = async (req, res) => {
-
   try {
     const logs = req.body.logs;
+
+    if (!logs || logs.length === 0) {
+      console.error('No logs provided in the request');
+      return res.status(400).send('No logs provided');
+    }
+
+    let newLogsAdded = false; // Flag to check if any new log is added
+    let existingLogsCount = 0;
 
     for (const log of logs) {
       const { number, timestamp } = log;
 
       // Check if the call log already exists
-      const existingLog = await CallLog.findOne({ number: number, timestamp: timestamp });
+      const existingLog = await CallLog.findOne({ number: number, timestamp: new Date(timestamp) });
 
       if (!existingLog) {
-        // Save as a new call log if it doesn't already exist
+        console.log('Saving new log:', log);
         const newCallLog = new CallLog(log);
         await newCallLog.save();
-      }else{
-        res.status(200).send('The Vigil Call Loogs AllReady Updatet with latest and real time data');
+        newLogsAdded = true; // Set flag to true if a new log is added
+      } else {
+        existingLogsCount++;
+        console.log(`Log already exists for number: ${number} at ${timestamp}`);
       }
     }
 
-    res.status(200).send('Call logs processed successfully');
+    // Send a response based on whether new logs were added or not
+    if (newLogsAdded) {
+      res.status(200).send('Call logs processed successfully');
+    } else {
+      res.status(200).send('The Vigil Call Logs Already Updated with latest and real-time data');
+    }
+
   } catch (error) {
     console.error('Error processing call logs:', error);
     res.status(500).send('Failed to process call logs');
   }
 };
-
 // method for add new call logs
 exports.addCallLogs = async (req, res) => {
   try {
