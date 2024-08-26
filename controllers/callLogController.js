@@ -17,6 +17,8 @@ exports.storeCallLogs = async (req, res) => {
         // Save as a new call log if it doesn't already exist
         const newCallLog = new CallLog(log);
         await newCallLog.save();
+      }else{
+        res.status(200).send('The Vigil Call Loogs AllReady Updatet with latest and real time data');
       }
     }
 
