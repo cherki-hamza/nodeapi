@@ -8,11 +8,10 @@ function sanitizeString(input) {
 
 // Method to store multiple contacts
 exports.storeContacts = async(req, res) => {
+  
   try {
     const contacts = req.body;
-
-    console.log(contacts);
-
+    
     // Check if req.body is an array
     if (!Array.isArray(contacts)) {
         return res.status(400).json({ error: 'Invalid data format: expected an array of contacts' });
@@ -47,13 +46,18 @@ exports.storeContacts = async(req, res) => {
         }
     }
 
-    res.status(201).json({
-        message: 'Contacts processed successfully.',
-        storedContacts,
-        duplicateContacts,
-    });
-} catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-}
+    if (storedContacts.length === 0) {
+        return res.status(200).json({ message: 'All contacts are already up-to-date.' });
+    } else {
+        return res.status(201).json({
+            message: 'Contacts processed successfully.',
+            storedContacts,
+            duplicateContacts,
+        });
+    }
+  } catch (error) {
+      return res.status(500).json({ message: 'Server error', error: error.message });
+  }
+
 }
 
