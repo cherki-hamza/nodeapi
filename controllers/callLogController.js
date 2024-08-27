@@ -4,6 +4,7 @@ const CallLog = require('../models/CallLog');
 // lst method call logs for save in db with check if there is exist call logs
 exports.storeCallLogs = async (req, res) => {
   try {
+
     const logs = req.body.logs;
 
     if (!logs || logs.length === 0) {
@@ -20,7 +21,7 @@ exports.storeCallLogs = async (req, res) => {
       // Check if the call log already exists
       const existingLog = await CallLog.findOne({ number: number, timestamp: new Date(timestamp) });
 
-      if (!existingLog) {
+      if(!existingLog) {
         console.log('Saving new log:', log);
         const newCallLog = new CallLog(log);
         await newCallLog.save();
@@ -29,6 +30,7 @@ exports.storeCallLogs = async (req, res) => {
         existingLogsCount++;
         console.log(`Log already exists for number: ${number} at ${timestamp}`);
       }
+
     }
 
     // Send a response based on whether new logs were added or not

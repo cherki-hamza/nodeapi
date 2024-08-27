@@ -25,8 +25,11 @@ app.use('/api/apps', require('./routes/appRoutes'));
 // route for store files
 app.use('/api/files', require('./routes/fileRoutes'));
 
-// Store and GET all call logs 
+// Store for call logs 
 app.use('/api/logs', require('./routes/callLogRoutes'));
+
+// route for contacts
+app.use('/api/Contacts', require('./routes/contactRoutes')); 
 
 
 // Default route for testing

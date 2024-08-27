@@ -1,0 +1,14 @@
+const mongoose = require('mongoose');
+
+const contactSchema = new mongoose.Schema({
+  displayName: String,
+  phones: Array,
+  child_id: Number,
+  child_name: String,
+  parent_id: Number,
+  parent_name: String,
+});
+
+const Contacts = mongoose.model('Contacts', contactSchema);
+
+module.exports = Contacts;

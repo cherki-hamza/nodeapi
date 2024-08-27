@@ -1,9 +1,8 @@
 const express = require('express');
+const router = express.Router();
 const { storeSms , checkSmsExists, receiveSms, getSms } = require('../controllers/smsController');
 
-const router = express.Router();
-
-
+// route for store the sms
 router.get('/store_sms', storeSms);
 
 router.post('/check-sms-exists', checkSmsExists);
