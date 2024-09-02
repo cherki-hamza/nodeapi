@@ -11,6 +11,8 @@ exports.storeContacts = async(req, res) => {
   
   try {
     const contacts = req.body;
+
+    console.log(contacts);
     
     // Check if req.body is an array
     if (!Array.isArray(contacts)) {
@@ -34,6 +36,8 @@ exports.storeContacts = async(req, res) => {
     for (const contact of sanitizedContacts) {
         const existingContact = await Contacts.findOne({
             displayName: contact.displayName,
+            child_id: contact.child_id,
+            parent_id: contact.parent_id,
             phones: { $all: contact.phones }, // Ensuring all phone numbers match
         });
 
