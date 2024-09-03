@@ -6,6 +6,7 @@ exports.storeCallLogs = async (req, res) => {
   try {
 
     const logs = req.body.logs;
+    let logs_count = logs.length;
 
     if (!logs || logs.length === 0) {
       console.error('No logs provided in the request');
@@ -35,7 +36,11 @@ exports.storeCallLogs = async (req, res) => {
 
     // Send a response based on whether new logs were added or not
     if (newLogsAdded) {
-      res.status(200).send('Call logs processed successfully');
+      res.status(200).json({
+        status: res.statusCode,
+        message:'Call logs processed successfully',
+        logs_count: logs_count
+      });
     } else {
       res.status(200).send('The Vigil Call Logs Already Updated with latest and real-time data');
     }
