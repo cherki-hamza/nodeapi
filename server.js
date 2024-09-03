@@ -8,8 +8,8 @@ require('dotenv').config();
 const app = express();
 
 // Middleware
-app.use(express.json());
-app.use(bodyParser.json());
+//app.use(express.json());
+//app.use(bodyParser.json());
 
 // Increase the limit to handle larger payloads
 app.use(bodyParser.json({ limit: '200mb' }));  // You can set this to a value you deem appropriate
