@@ -12,12 +12,12 @@ app.use(express.json());
 app.use(bodyParser.json());
 
 // Increase the limit to handle larger payloads
-app.use(bodyParser.json({ limit: '50mb' }));  // You can set this to a value you deem appropriate
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+app.use(bodyParser.json({ limit: '200mb' }));  // You can set this to a value you deem appropriate
+app.use(bodyParser.urlencoded({ limit: '200mb', extended: true }));
 
 // Alternatively, if you are using `express.json()` instead of `body-parser`
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(express.json({ limit: '200mb' }));
+app.use(express.urlencoded({ limit: '200mb', extended: true }));
 
 app.use(cors());
 
