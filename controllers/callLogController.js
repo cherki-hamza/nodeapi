@@ -36,13 +36,16 @@ exports.storeCallLogs = async (req, res) => {
 
     // Send a response based on whether new logs were added or not
     if (newLogsAdded) {
-      res.status(200).json({
+      res.status(res.statusCode).json({
         status: res.statusCode,
         message:'Call logs processed successfully',
         logs_count: logs_count
       });
     } else {
-      res.status(200).send('The Vigil Call Logs Already Updated with latest and real-time data');
+      res.status(res.statusCode).json({
+        status: res.statusCode,
+        message:'The Vigil Call Logs Already Updated with latest and real-time data',
+      });
     }
 
   } catch (error) {

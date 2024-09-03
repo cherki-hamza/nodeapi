@@ -9,7 +9,8 @@ function sanitizeString(input) {
 // Method to store multiple contacts
 exports.storeContacts = async (req, res) => {
     try {
-        const contacts = req.body;
+        const contacts = req.body.contacts;
+        let contacts_count = contacts.length;
 
         // Check if req.body is an array
         if (!Array.isArray(contacts)) {
@@ -64,10 +65,16 @@ exports.storeContacts = async (req, res) => {
         }
 
         if (storedContacts.length === 0) {
-            return res.status(200).json({ message: 'All contacts are already up-to-date.' });
+            return res.status(res.statusCode).json({
+                  status: res.statusCode,
+                  message: 'All contacts are already up-to-date.', 
+                  contacts_count: contacts_count
+                });
         } else {
-            return res.status(201).json({
+            return res.status(res.statusCode).json({
+                status: res.statusCode,
                 message: 'Contacts processed successfully.',
+                contacts_count: contacts_count,
                 storedContacts,
                 duplicateContacts,
             });
