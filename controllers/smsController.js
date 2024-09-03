@@ -4,7 +4,7 @@ const Sms = require('../models/Sms');
 exports.storeSms = async (req,res) => {
    
   try {
-    const smsList = req.body; // Assume req.body is an array of SMS objects
+    const smsList = req.body.sms; // Assume req.body is an array of SMS objects
 
     let savedSmsCount = 0;
     let duplicateSmsCount = 0;
