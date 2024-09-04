@@ -5,8 +5,7 @@ exports.storeSms = async (req,res) => {
    
   try {
     const smsList = req.body.sms; // Assume req.body is an array of SMS objects
-
-    console.table(smsList);
+    let sms_count = smsList.length;
 
     let savedSmsCount = 0;
     let duplicateSmsCount = 0;
@@ -39,8 +38,12 @@ exports.storeSms = async (req,res) => {
       savedSmsCount++;
     }
 
-    res.status(201).json({
+    res.status(res.statusCode).json({
+      status: res.statusCode,
       message: `Processed ${smsList.length} SMS messages. Stored ${savedSmsCount} new messages, skipped ${duplicateSmsCount} duplicates.`,
+      duplicate_Sms_Count: duplicateSmsCount,
+      sms_count: sms_count
+
     });
   } catch (error) {
     console.error('Error storing SMS:', error);
