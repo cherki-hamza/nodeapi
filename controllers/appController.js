@@ -1,63 +1,41 @@
 const App = require('../models/App');
 
 exports.saveApps = async (req, res) => {
-   
+
   try {
-    const appsData = req.body.apps;  // Expecting array of apps in the request
+    const appsData = req.body.apps; // Expecting an array of apps
+
     if (!Array.isArray(appsData)) {
-      return res.status(400).send('Invalid data format. Expected an array of apps.');
+      return res.status(400).send('Invalid data format');
     }
 
-    const uniqueApps = [];
-    const appsToInsert = [];
+    const newApps = [];
 
-    for (let app of appsData) {
-      const { name, packageName } = app;
+    for (const appData of appsData) {
+      const { packageName } = appData;
 
-      // Check if app already exists in the database by packageName
+      // Check if the app with the same packageName already exists
       const existingApp = await App.findOne({ packageName });
 
       if (!existingApp) {
-        let iconUrl = '';
-
-        // Upload the icon to cloud storage (e.g., Cloudinary)
-        if (app.icon) {
-          const result = await cloudinary.uploader.upload(app.icon.tempFilePath, {
-            folder: 'app-icons',
-            public_id: `${name}_icon`,
-          });
-          iconUrl = result.secure_url;
-        }
-
-        // If app is new (not found in the database), prepare to insert
-        const newApp = {
-          appName: name,
-          packageName: packageName,
-          icon: iconUrl,
-          child_id: app.child_id || null,
-          child_name: app.child_name || '',
-          parent_id: app.parent_id || null,
-          parent_name: app.parent_name || '',
-        };
-
-        appsToInsert.push(newApp);
+        // If the app does not exist, prepare to insert it
+        newApps.push(appData);
       } else {
-        // If app is already in the database, skip it
-        console.log(`App with packageName ${packageName} already exists, skipping.`);
+        console.log(`App with packageName ${packageName} already exists. Skipping.`);
       }
     }
 
-    if (appsToInsert.length > 0) {
-      // Insert new apps into the MongoDB database
-      await App.insertMany(appsToInsert);
-      console.log('New apps inserted:', appsToInsert);
-      res.status(200).send('Apps uploaded and saved successfully.');
+    // If there are new apps, insert them into the database
+    if (newApps.length > 0) {
+      await App.insertMany(newApps);
+      console.log('New apps saved:', newApps);
+      res.status(200).send('New apps saved successfully');
     } else {
-      res.status(200).send('No new apps to insert.');
+      res.status(200).send('No new apps to save.');
     }
   } catch (error) {
-    console.error('Error uploading apps:', error);
-    res.status(500).send('Error uploading apps.');
+    console.error('Error saving apps data:', error);
+    res.status(500).send('Error saving apps data');
   }
-  
+
 };
