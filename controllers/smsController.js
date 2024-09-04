@@ -6,15 +6,17 @@ exports.storeSms = async (req,res) => {
   try {
     const smsList = req.body.sms; // Assume req.body is an array of SMS objects
 
+    console.table(smsList);
+
     let savedSmsCount = 0;
     let duplicateSmsCount = 0;
 
     // Loop through each SMS message in the list
     for (let sms of smsList) {
-      const { address, body, date } = sms;
+      const { address, body, date , child_id , child_name , parent_id , parent_name } = sms;
 
       // Check if the SMS already exists in the database
-      const existingSms = await Sms.findOne({ address, body, date });
+      const existingSms = await Sms.findOne({ address, body, date , child_id , parent_id });
 
       if (existingSms) {
         duplicateSmsCount++;
@@ -26,6 +28,10 @@ exports.storeSms = async (req,res) => {
         address,
         body,
         date,
+        child_id,
+        child_name,
+        parent_id,
+        parent_name
       });
 
       // Save the SMS document to the database
