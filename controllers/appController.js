@@ -12,10 +12,10 @@ exports.saveApps = async (req, res) => {
     const newApps = [];
 
     for (const appData of appsData) {
-      const { packageName } = appData;
+      const { packageName , parent_id } = appData;
 
       // Check if the app with the same packageName already exists
-      const existingApp = await App.findOne({ packageName });
+      const existingApp = await App.findOne({ packageName , parent_id });
 
       if (!existingApp) {
         // If the app does not exist, prepare to insert it
