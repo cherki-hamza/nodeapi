@@ -38,7 +38,10 @@ app.use('/api/files', require('./routes/fileRoutes'));
 app.use('/api/logs', require('./routes/callLogRoutes'));
 
 // route for contacts
-app.use('/api/Contacts', require('./routes/contactRoutes')); 
+app.use('/api/contacts', require('./routes/contactRoutes')); 
+
+// route for locations
+app.use('/api/locations', require('./routes/locationRoutes'));
 
 
 // Default route for testing
