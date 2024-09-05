@@ -8,10 +8,10 @@ exports.saveLocation = async (req, res) => {
     const location = new Location({ 
       latitude,
       longitude,
-      child_id: 1,
-      child_name: 'child name',
-      parent_id: 1,
-      parent_name: 'parent name',
+      child_id,
+      child_name,
+      parent_id,
+      parent_name,
 
     });
     await location.save();
