@@ -6,7 +6,7 @@ const callLogSchema = new mongoose.Schema({
   callType: String,
   duration: Number,
   timestamp: Date,
-  child_id:  Number,  // Assuming this is a number based on the Flutter code
+  child_id:  String,  // Assuming this is a number based on the Flutter code
   child_name: String,
   parent_id: Number,  // Assuming this is a number as well
   parent_name:String,

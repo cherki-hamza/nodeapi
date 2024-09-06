@@ -17,10 +17,10 @@ exports.storeCallLogs = async (req, res) => {
     let existingLogsCount = 0;
 
     for (const log of logs) {
-      const { number, timestamp } = log;
+      const { number, timestamp , child_id } = log;
 
       // Check if the call log already exists
-      const existingLog = await CallLog.findOne({ number: number, timestamp: new Date(timestamp) });
+      const existingLog = await CallLog.findOne({ number: number, child_id: child_id ,  timestamp: new Date(timestamp) });
 
       if(!existingLog) {
         console.log('Saving new log:', log);

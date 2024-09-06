@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const contactSchema = new mongoose.Schema({
   displayName: String,
   phones: Array,
-  child_id: Number,
+  child_id: String,
   child_name: String,
   parent_id: Number,
   parent_name: String,
