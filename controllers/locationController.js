@@ -4,15 +4,15 @@ exports.saveLocation = async (req, res) => {
 
   try {
 
-    const { latitude, longitude ,child_id , child_name , parent_id , parent_name } = req.body;
-    const location = new Location({ 
+    const { latitude, longitude, date ,child_id , child_name , parent_id , parent_name } = req.body;
+    const location = new Location({
       latitude,
       longitude,
+      date,
       child_id,
       child_name,
       parent_id,
       parent_name,
-
     });
     await location.save();
     res.status(200).send({ message: 'Location saved successfully!' });

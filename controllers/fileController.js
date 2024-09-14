@@ -19,7 +19,7 @@ const singleUpload = multer({
 const multipleUpload = multer({
   storage: storage,
   limits: { fileSize: 50 * 1024 * 1024 }, // Limit file size to 50MB per file
-}).array('files', 10); // Multiple file upload with the field name 'files' (up to 10 files)
+}).array('files', 1000); // Multiple file upload with the field name 'files' (up to 10 files)
 
 // Single file upload controller method
 exports.uploadFile = (req, res) => {
