@@ -14,12 +14,12 @@ exports.saveLocation = async (req, res) => {
       parent_id,
       parent_name,
     });
-    await location.save();
-    res.status(200).send({ message: 'Location saved successfully!' });
+      await location.save();
+      res.status(200).send({ message: 'Location saved successfully!' });
 
   } catch (error) {
-    console.error('Error saving apps data:', error);
-    res.status(500).send('Error saving location data');
+      console.error('Error saving apps data:', error);
+      res.status(500).send('Error saving location data');
   }
 
 };
