@@ -83,3 +83,35 @@ exports.storeContacts = async (req, res) => {
         return res.status(500).json({ message: 'Server error', error: error.message });
     }
 }
+
+
+// Method to get all contacts
+exports.getAllContacts = async (req, res) => {
+    try {
+        // Fetch all contacts from the database
+        const contacts = await Contacts.find({});
+
+        // Check if there are no contacts in the database
+        if (contacts.length === 0) {
+            return res.status(404).json({
+                status: 404,
+                message: 'No contacts found',
+            });
+        }
+
+        // Return the list of contacts
+        return res.status(200).json({
+            status: 200,
+            message: 'Contacts retrieved successfully',
+            contacts_count: contacts.length,
+            contacts,
+        });
+    } catch (error) {
+        // Handle any errors that occur
+        return res.status(500).json({
+            status: 500,
+            message: 'Server error',
+            error: error.message,
+        });
+    }
+};

@@ -4,11 +4,12 @@ exports.saveLocation = async (req, res) => {
 
   try {
 
-    const { latitude, longitude, date ,child_id , child_name , parent_id , parent_name } = req.body;
+    const { latitude, longitude, date, address ,child_id , child_name , parent_id , parent_name } = req.body;
     const location = new Location({
       latitude,
       longitude,
       date,
+      address,
       child_id,
       child_name,
       parent_id,
