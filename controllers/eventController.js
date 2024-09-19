@@ -39,7 +39,7 @@ exports.saveEvents = async (req, res) => {
         data: newEvents,
       });
     }else{
-      res.status(200).json({
+      res.status(res.statusCode).json({
         message: 'Oops there is no new events its allraedy updated',
       });
     }
