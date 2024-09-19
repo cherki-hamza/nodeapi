@@ -28,10 +28,18 @@ exports.saveEvents = async (req, res) => {
       }
     }
 
-    res.status(200).json({
-      message: 'Events saved successfully',
-      data: newEvents,
-    });
+    if(newEvents){
+      res.status(200).json({
+        message: 'Events saved successfully',
+        data: newEvents,
+      });
+    }else{
+      res.status(200).json({
+        message: 'Oops there is no new events its allraedy updated',
+      });
+    }
+
+    
   } catch (error) {
     res.status(500).json({ message: 'Failed to save events', error });
   }
