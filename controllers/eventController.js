@@ -16,6 +16,8 @@ exports.saveEvents = async (req, res) => {
         title: event.title,
         start: event.start,
         end: event.end,
+        location: event.location ?? 'empty',
+        description: event.description ?? 'empty',
         child_id: event.child_id,
         child_name: event.child_name,
         parent_id: event.parent_id,
