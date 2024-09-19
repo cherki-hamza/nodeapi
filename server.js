@@ -44,7 +44,7 @@ app.use('/api/contacts', require('./routes/contactRoutes'));
 app.use('/api/locations', require('./routes/locationRoutes'));
 
 // POST route to save events
-router.post('/api/events', require('./routes/eventRoutes'));
+app.use('/api/events', require('./routes/eventRoutes'));
 
 
 // Default route for testing
