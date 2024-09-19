@@ -3,6 +3,45 @@ const multer = require('multer');
 const path = require('path');
 const File = require('../models/File');
 
+
+// method for store files
+exports.storeFiles = async (req, res) => {
+  try {
+    const files = req.body.files; // Expecting an array of file objects
+
+    if (!Array.isArray(files)) {
+      return res.status(400).json({ error: 'Files must be an array.' });
+    }
+
+    const savedFiles = [];
+    const duplicateFiles = [];
+
+    for (const file of files) {
+      // Check if a file with the same original_filename exists
+      const existingFile = await File.findOne({ original_filename: file.original_filename });
+
+      if (existingFile) {
+        duplicateFiles.push(file.original_filename); // Collect duplicates
+      } else {
+        // Save the new file if no duplicates found
+        const newFile = new File(file);
+        const savedFile = await newFile.save();
+        savedFiles.push(savedFile);
+      }
+    }
+
+    res.status(200).json({
+      message: 'File processing complete!',
+      savedFiles, // List of files that were stored
+      duplicateFiles, // List of duplicate filenames that were ignored
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to store files.' });
+  }
+};
+
+
 // Multer setup for handling file uploads
 const storage = multer.diskStorage({
   filename: function (req, file, cb) {
