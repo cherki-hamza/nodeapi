@@ -1,13 +1,37 @@
 // controllers/eventController.js
 const Event = require('../models/Event');
 
-// Save calendar events to MongoDB
 exports.saveEvents = async (req, res) => {
   const events = req.body.events;
 
   try {
-    const savedEvents = await Event.insertMany(events);
-    res.status(200).json({ message: 'Events saved successfully', data: savedEvents });
+    // List to hold successfully inserted events
+    const newEvents = [];
+
+    for (const event of events) {
+      // Check if an event with the same title, start, and end time already exists
+      const existingEvent = await Event.findOne({
+        title: event.title,
+        start: event.start,
+        end: event.end,
+        child_id: event.child_id,
+        child_name: event.child_name,
+        parent_id: event.parent_id,
+        parent_name: event.parent_name,
+      });
+
+      // If the event does not exist, insert it
+      if (!existingEvent) {
+        const newEvent = new Event(event);
+        await newEvent.save();
+        newEvents.push(newEvent); // Add successfully saved event to the list
+      }
+    }
+
+    res.status(200).json({
+      message: 'Events saved successfully',
+      data: newEvents,
+    });
   } catch (error) {
     res.status(500).json({ message: 'Failed to save events', error });
   }
