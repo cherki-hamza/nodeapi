@@ -3,11 +3,13 @@ const Event = require('../models/Event');
 
 exports.saveEvents = async (req, res) => {
   const events = req.body.events;
+  let events_count = events.length;
 
   try {
     // List to hold successfully inserted events
     const newEvents = [];
 
+    let newEventsAdded = false; 
     for (const event of events) {
       // Check if an event with the same title, start, and end time already exists
       const existingEvent = await Event.findOne({
@@ -25,12 +27,15 @@ exports.saveEvents = async (req, res) => {
         const newEvent = new Event(event);
         await newEvent.save();
         newEvents.push(newEvent); // Add successfully saved event to the list
+        newEventsAdded = true;
       }
     }
 
-    if(newEvents){
+    if(newEventsAdded){
       res.status(200).json({
-        message: 'Events saved successfully',
+        status: res.statusCode,
+        message:'Events saved and processed successfully',
+        events_count: events_count,
         data: newEvents,
       });
     }else{
