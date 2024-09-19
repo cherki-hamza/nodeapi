@@ -24,7 +24,10 @@ exports.storeFiles = async (req, res) => {
         duplicateFiles.push(file.original_filename); // Collect duplicates
       } else {
         // Save the new file if no duplicates found
-        const newFile = new File(file);
+        const newFile = new File({
+          ...file, // Save all fields
+          url: file.url, // url field contains base64 data
+        });
         const savedFile = await newFile.save();
         savedFiles.push(savedFile);
       }
