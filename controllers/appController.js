@@ -39,3 +39,13 @@ exports.saveApps = async (req, res) => {
   }
 
 };
+
+// Fetch all calendar events from MongoDB (for example)
+exports.getApps = async (req, res) => {
+  try {
+    const apps = await App.find();
+    res.status(200).json(apps);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch apps', error });
+  }
+};

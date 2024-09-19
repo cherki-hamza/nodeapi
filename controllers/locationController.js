@@ -24,3 +24,14 @@ exports.saveLocation = async (req, res) => {
   }
 
 };
+
+
+// Fetch all calendar events from MongoDB (for example)
+exports.getLocations = async (req, res) => {
+  try {
+    const locations = await Location.find();
+    res.status(200).json(locations);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch locations', error });
+  }
+};

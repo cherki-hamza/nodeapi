@@ -43,10 +43,13 @@ app.use('/api/contacts', require('./routes/contactRoutes'));
 // route for locations
 app.use('/api/locations', require('./routes/locationRoutes'));
 
+// POST route to save events
+router.post('/api/events', require('./routes/eventRoutes'));
+
 
 // Default route for testing
 app.get('/api/dev', (req, res) => {
-  res.status(200).send('welcome to node js');
+  res.status(200).send('welcome to Vigil API Backend ...');
 });
 
 const PORT = process.env.PORT || 3000;
