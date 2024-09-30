@@ -6,7 +6,7 @@ const smsSchema = new mongoose.Schema({
   date: Date,
   child_id:  String,  // Assuming this is a number based on the Flutter code
   child_name: String,
-  parent_id: Number,  // Assuming this is a number as well
+  parent_id: String,  // Assuming this is a number as well
   parent_name:String,
 });
 

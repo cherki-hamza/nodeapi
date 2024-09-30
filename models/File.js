@@ -7,7 +7,7 @@ const fileSchema = new mongoose.Schema({
   original_filename: { type: String, unique: true, required: true }, // Unique original filename
   child_id: String,  // Assuming this is a number based on the Flutter code
   child_name: String,
-  parent_id: Number,  // Assuming this is a number as well
+  parent_id: String,  // Assuming this is a number as well
   parent_name: String,
 }, { timestamps: true });
 

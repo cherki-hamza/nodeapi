@@ -52,6 +52,43 @@ exports.storeSms = async (req,res) => {
 
 };
 
+exports.getSms = async (req, res) => {
+  const { address, name, date } = req.query;
+  const query = {};
+
+  if (address) query.address = address;
+  if (name) query.name = name;
+  if (date) query.date = new Date(date);
+
+  try {
+    const smsList = await Sms.find(query);
+    const smsCount = await Sms.countDocuments(query);
+
+    res.status(200).json({
+      count: smsCount,
+      messages: smsList,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching SMS' });
+  }
+
+};
+
+// method to get the total count of SMS
+exports.smsCount = async function (req, res) {
+  try {
+
+    const sms_count = await Sms.countDocuments();
+    res.status(200).json({'sms_count' : sms_count});
+
+  } catch (error) {
+    throw new Error('Error getting total SMS count: ' + error.message);
+  }
+};
+
+
+
 exports.checkSmsExists = async (req, res) => {
   const { address, body, date } = req.body;
 
@@ -77,24 +114,4 @@ exports.receiveSms = async (req, res) => {
   }
 };
 
-exports.getSms = async (req, res) => {
-  const { address, name, date } = req.query;
-  const query = {};
 
-  if (address) query.address = address;
-  if (name) query.name = name;
-  if (date) query.date = new Date(date);
-
-  try {
-    const smsList = await Sms.find(query);
-    const smsCount = await Sms.countDocuments(query);
-
-    res.status(200).json({
-      count: smsCount,
-      messages: smsList,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error fetching SMS' });
-  }
-};

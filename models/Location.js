@@ -7,7 +7,7 @@ const locationSchema = new mongoose.Schema({
   address:     { type: String },
   child_id:    { type: String },
   child_name:  { type: String },
-  parent_id:   { type: Number },
+  parent_id:   { type: String },
   parent_name: { type: String },
 });
 

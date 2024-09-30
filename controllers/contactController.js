@@ -115,3 +115,16 @@ exports.getAllContacts = async (req, res) => {
         });
     }
 };
+
+// method for get the count of contacts contactsCount
+exports.contactsCount = async function (req, res) {
+    try {
+  
+      const contacts_count = await Contacts.countDocuments();
+      res.status(200).json({'contacts_count' : contacts_count});
+  
+    } catch (error) {
+      throw new Error('Error getting total Contacts count: ' + error.message);
+    }
+};
+

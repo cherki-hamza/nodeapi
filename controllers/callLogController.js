@@ -112,3 +112,16 @@ exports.checkCallLog = async (req, res) => {
     return res.status(500).json({ error: 'Failed to check call logs' });
   }
 };
+
+
+// method for get the count of callLogs
+exports.calllogsCount = async function (req, res) {
+  try {
+
+    const callLogs_count = await CallLog.countDocuments();
+    res.status(200).json({'callLogs_count' : callLogs_count});
+
+  } catch (error) {
+    throw new Error('Error getting total callLogs count: ' + error.message);
+  }
+};

@@ -19,7 +19,7 @@ exports.saveLocation = async (req, res) => {
       res.status(200).send({ message: 'Location saved successfully!' });
 
   } catch (error) {
-      console.error('Error saving apps data:', error);
+      console.error('Error saving location:', error);
       res.status(500).send('Error saving location data');
   }
 
@@ -35,3 +35,17 @@ exports.getLocations = async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch locations', error });
   }
 };
+
+
+// method to get the total count of Locations
+exports.locationsCount = async function (req, res) {
+  try {
+
+    const locations_count = await Location.countDocuments();
+    res.status(200).json({'locations_count' : locations_count});
+
+  } catch (error) {
+    throw new Error('Error getting total Locations count: ' + error.message);
+  }
+};
+

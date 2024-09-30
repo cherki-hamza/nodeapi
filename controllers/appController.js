@@ -49,3 +49,17 @@ exports.getApps = async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch apps', error });
   }
 };
+
+
+// method for get the count of apps
+exports.appsCount = async function (req, res) {
+  try {
+
+    const apps_count = await App.countDocuments();
+    res.status(200).json({'apps_count' : apps_count});
+
+  } catch (error) {
+    throw new Error('Error getting total apps count: ' + error.message);
+  }
+  
+};

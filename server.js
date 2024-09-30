@@ -46,6 +46,9 @@ app.use('/api/locations', require('./routes/locationRoutes'));
 // POST route to save events
 app.use('/api/events', require('./routes/eventRoutes'));
 
+// Get API for get all device data
+// app.use('/');
+
 
 // Default route for testing
 app.get('/api/dev', (req, res) => {

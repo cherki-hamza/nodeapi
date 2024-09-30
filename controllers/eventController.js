@@ -61,3 +61,16 @@ exports.getEvents = async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch events', error });
   }
 };
+
+
+// method to get the total count of events
+exports.eventsCount = async function (req, res) {
+  try {
+
+    const events_count = await Event.countDocuments();
+    res.status(200).json({'events_count' : events_count});
+
+  } catch (error) {
+    throw new Error('Error getting total Events count: ' + error.message);
+  }
+};

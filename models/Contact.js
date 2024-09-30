@@ -5,7 +5,7 @@ const contactSchema = new mongoose.Schema({
   phones: Array,
   child_id: String,
   child_name: String,
-  parent_id: Number,
+  parent_id: String,
   parent_name: String,
 });
 
