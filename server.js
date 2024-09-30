@@ -46,6 +46,9 @@ app.use('/api/locations', require('./routes/locationRoutes'));
 // POST route to save events
 app.use('/api/events', require('./routes/eventRoutes'));
 
+// get all parent  data
+app.get('/api/deviceData/:parentId', deviceDataController.getDeviceDataByParentId);
+
 // Get API for get all device data
 // app.use('/');
 
