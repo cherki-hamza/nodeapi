@@ -47,7 +47,7 @@ app.use('/api/locations', require('./routes/locationRoutes'));
 app.use('/api/events', require('./routes/eventRoutes'));
 
 // get all parent  data
-app.get('/api/deviceData', require('./routes/deviceRoutes'));
+app.use('/api/deviceData', require('./routes/deviceRoutes'));
 
 // Get API for get all device data
 // app.use('/');
