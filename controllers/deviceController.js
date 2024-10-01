@@ -25,11 +25,11 @@ const getDeviceDataByParentId = async (req, res) => {
         Contacts.find({ child_name: child, parent_id: parentId }),
       ]);
 
-      // Format app usage data from `App` model's `usageInfo`
+      // Format app usage data
       const appUsage = apps.map((app) => ({
-        icon: app.icon, // Assuming icon is stored in base64 format or asset path
+        icon: app.icon, // Assuming icon is already stored in base64 format
         name: app.appName,
-        time: `${Math.floor(app.usageInfo.usageMinutes / 60)}H ${app.usageInfo.usageMinutes % 60}M`, // Convert minutes to hours and minutes
+        time: `${Math.floor(app.usageInfo.usageMinutes / 60)}H ${app.usageInfo.usageMinutes % 60}M`,
       }));
 
       // Format call logs
@@ -56,7 +56,7 @@ const getDeviceDataByParentId = async (req, res) => {
         name: child,
         device: apps[0]?.packageName || 'Unknown Device',
         battery: 'Unknown', // You may need to fetch this from another source
-        appUsage,            // Add app usage data here
+        appUsage,
         callLogs: callLogsData,
         smsLogs: smsLogsData,
         photos: { count: 50, new: 10 }, // Placeholder, modify with real data
