@@ -14,7 +14,10 @@ const getDeviceDataByParentId = async (req, res) => {
       return res.status(404).json({ message: 'No data found for this parent_id.' });
     }
 
-    const deviceData = {};
+    const deviceData = {
+      parentId: parentId,
+      children: {},
+    };
 
     // Loop through each child and gather data from various collections
     for (const child of children) {
@@ -25,11 +28,11 @@ const getDeviceDataByParentId = async (req, res) => {
         Contacts.find({ child_name: child, parent_id: parentId }),
       ]);
 
-      // Format app usage data
+      // Format app usage data from `App` model's `usageInfo`
       const appUsage = apps.map((app) => ({
-        icon: app.icon, // Assuming icon is already stored in base64 format
+        icon: app.icon, // Assuming icon is stored in base64 format or asset path
         name: app.appName,
-        time: `${Math.floor(app.usageInfo.usageMinutes / 60)}H ${app.usageInfo.usageMinutes % 60}M`,
+        time: `${Math.floor(app.usageInfo.usageMinutes / 60)}H ${app.usageInfo.usageMinutes % 60}M`, // Convert minutes to hours and minutes
       }));
 
       // Format call logs
@@ -52,11 +55,11 @@ const getDeviceDataByParentId = async (req, res) => {
       };
 
       // Populate the device data for each child
-      deviceData[child] = {
+      deviceData.children[child] = {
         name: child,
         device: apps[0]?.packageName || 'Unknown Device',
         battery: 'Unknown', // You may need to fetch this from another source
-        appUsage,
+        appUsage,            // Add app usage data here
         callLogs: callLogsData,
         smsLogs: smsLogsData,
         photos: { count: 50, new: 10 }, // Placeholder, modify with real data
@@ -67,7 +70,7 @@ const getDeviceDataByParentId = async (req, res) => {
       };
     }
 
-    res.json(deviceData);
+    res.json(deviceData); // Return the entire deviceData object, including child data
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
