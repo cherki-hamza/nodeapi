@@ -46,16 +46,16 @@ const getDeviceDataByParentId = async (req, res) => {
         duration: callLogs.length > 0 ? `${Math.floor(totalCallDuration / 60)}H ${totalCallDuration % 60}M` : '0H 0M',
       };
 
-      // Format SMS logs
+      // Format SMS logs using the 'type' column
       const smsLogsData = {
-        incoming: smsLogs.filter((sms) => sms.body.startsWith('Incoming')).length || 0,
-        outgoing: smsLogs.filter((sms) => sms.body.startsWith('Outgoing')).length || 0,
+        incoming: smsLogs.filter((sms) => sms.type === 'incoming').length || 0,
+        outgoing: smsLogs.filter((sms) => sms.type === 'Outgoing').length || 0,
       };
 
       // Format contacts data
       const contactsData = {
         total: contacts.length || 0,
-        new: contacts.length || 0, // Assuming no distinction between total/new
+        new: contacts.length > 0 ? Math.min(contacts.length, 10) : 0, // Assuming a "new" field
       };
 
       // Placeholder for data that doesn't exist (keylogger, photos, videos)
@@ -88,15 +88,20 @@ const getDeviceDataByParentId = async (req, res) => {
         battery: 'Unknown', // You may need to fetch this from another source
         appUsage,            // Add app usage data here
         callLogs: callLogsData,
-        smsLogs: smsLogsData,
+        smsLogs: smsLogsData, // Updated SMS logs
         photos: photosData,  // Placeholder photos data
         videos: videosData,  // Placeholder videos data
-        callRecordings: callRecordingsData, // Placeholder call recordings data
-        contacts: contactsData,
+        callRecordings: {
+          total: callRecordingsData.total,
+          new: callRecordingsData.new,
+        },
+        contacts: {
+          total: contactsData.total,
+          new: contactsData.new,
+        },
         location: locationData,   // Location data array for all locations
         events: formattedEvents,
         // Add callRecordings and keylogger placeholders
-        callRecordings: { total: 25, new: 5 }, // Placeholder call recordings data
         keylogger: [
           { content: 'Search for Flutter tips', app: 'Google', date: '07-01-2024', time: '4:00 pm' },
           { content: 'Message to mom', app: 'WhatsApp', date: '07-01-2024', time: '4:30 pm' },
@@ -108,103 +113,6 @@ const getDeviceDataByParentId = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};
-
-// Test data function, updated similarly
-const testdata = async(req,res) => {
-  const parentId = req.params.parentId;
-
-  const parentDB = mongoose.createConnection(process.env.MONGO_PARENT_URI);
-
-  // Child model - register with childDB connection
-  const childSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    age: { type: Number, required: true },
-    parentId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    location: { type: { type: String }, coordinates: [Number] },
-    deviceName: { type: String, default: '' },
-    batteryOptimizationAllowed: { type: Boolean, default: false }
-  });
-  childSchema.index({ location: '2dsphere' });
-
-  const Child = parentDB.model('Child', childSchema);
-
-  // Fetch children by parentId from the child database
-  const children = await Child.find({ parentId });
-  const result = {};
-
-  // Loop through each child and gather data
-  for (let child of children) {
-    const { name, deviceName, batteryOptimizationAllowed } = child;
-
-    const appUsage = await App.find({ child_id: child._id });
-    const formattedAppUsage = appUsage.map(app => ({
-      icon: app.icon || 'default-icon.png', // Default icon
-      name: app.appName || 'Unknown App',
-      time: formatUsageTime(app.usageInfo ? app.usageInfo.usageMinutes : 0) // Default usage time
-    }));
-
-    const callLogs = await CallLog.find({ child_id: child._id });
-    const callLogStats = {
-      count: callLogs.length || 0,
-      duration: formatCallDuration(callLogs.reduce((acc, log) => acc + log.duration, 0)) || '0H 0M'
-    };
-
-    const smsLogs = await Sms.find({ child_id: child._id });
-    const smsLogStats = {
-      incoming: smsLogs.length || 0 // Assuming this tracks total SMS logs
-    };
-
-    const contacts = await Contacts.find({ child_id: child._id });
-    const contactStats = {
-      total: contacts.length || 0
-    };
-
-    const photos = [];
-    const videos = [];
-    const mediaStats = {
-      photos: { count: photos.length || 0 },
-      videos: { count: videos.length || 0 }
-    };
-
-    const locations = await Location.find({ child_id: child._id });
-    const locationData = locations.length > 0 ? locations.map(loc => ({
-      coordinates: loc.coordinates,
-      type: loc.type || 'Unknown',
-      timestamp: loc.createdAt || new Date(), // Assuming `createdAt` holds the timestamp
-    })) : [];
-
-    const events = await Event.find({ child_id: child._id });
-    const formattedEvents = events.map(event => ({
-      title: event.title || 'Untitled Event',
-      start: event.start || new Date(),
-      end: event.end || new Date(),
-      location: event.location || 'Unknown Location',
-      description: event.description || 'No Description'
-    }));
-
-    result[name] = {
-      name,
-      device: deviceName || 'Unknown Device',
-      battery: batteryOptimizationAllowed ? `${batteryOptimizationAllowed}%` : 'Unknown',
-      appUsage: formattedAppUsage,
-      callLogs: callLogStats,
-      smsLogs: smsLogStats,
-      photos: mediaStats.photos,
-      videos: mediaStats.videos,
-      contacts: contactStats,
-      location: locationData, // Return all location data
-      events: formattedEvents,
-      // Add callRecordings and keylogger placeholders
-      callRecordings: { total: 25, new: 5 }, // Placeholder call recordings data
-      keylogger: [
-        { content: 'Search for Flutter tips', app: 'Google', date: '07-01-2024', time: '4:00 pm' },
-        { content: 'Message to mom', app: 'WhatsApp', date: '07-01-2024', time: '4:30 pm' },
-      ],
-    };
-  }
-
-  res.json(result);
 };
 
 // Helper functions
