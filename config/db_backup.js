@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// Create a separate connection for each database
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI, {
@@ -14,20 +13,18 @@ const connectDB = async () => {
   }
 };
 
-const connectParentDB = async () => {
+
+const connect_parent_DB = async () => {
   try {
-    const parentDB = mongoose.createConnection(process.env.MONGO_PARENT_URI, {
+    await mongoose.connect(process.env.MONGO_PARENT_URI, {
       /* useNewUrlParser: true,
       useUnifiedTopology: true, */
     });
-    console.log('MongoDB parent database connected');
-    
-    // You can return or export this connection if needed elsewhere
-    return parentDB;
+    console.log('MongoDB parent db connected');
   } catch (error) {
-    console.error('MongoDB parent database connection error:', error);
+    console.error('MongoDB parent db connection error:', error);
     process.exit(1);
   }
 };
 
-module.exports = { connectDB, connectParentDB };
+module.exports = {connectDB,connect_parent_DB};

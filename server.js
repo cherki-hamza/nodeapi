@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const connectDB = require('./config/db');
+const {connectDB , connectParentDB } = require('./config/db');
 
 require('dotenv').config();
 
@@ -21,8 +21,10 @@ app.use(express.urlencoded({ limit: '200mb', extended: true }));
 
 app.use(cors());
 
-// Connect to MongoDB
+// Connect to child MongoDB
 connectDB();
+// Connect to parent MongoDB
+connectParentDB();
 
 // Routes
 // route for authontification
