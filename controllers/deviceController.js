@@ -48,7 +48,7 @@ const getDeviceDataByParentId = async (req, res) => {
 
       // Format SMS logs using the 'type' column
       const smsLogsData = {
-        incoming: smsLogs.filter((sms) => sms.type === 'incoming').length || 0,
+        incoming: smsLogs.filter((sms) => sms.type === 'Incoming').length || 0,
         outgoing: smsLogs.filter((sms) => sms.type === 'Outgoing').length || 0,
       };
 
@@ -130,5 +130,4 @@ function formatCallDuration(duration) {
 
 module.exports = {
   getDeviceDataByParentId,
-  testdata
 };

@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/:parentId', getDeviceDataByParentId);
 
 // test data
-router.get('/:parentId/data', testdata);
+//router.get('/:parentId/data', testdata);
 
 module.exports = router;
 
