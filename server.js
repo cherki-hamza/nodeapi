@@ -7,10 +7,6 @@ require('dotenv').config();
 
 const app = express();
 
-// Middleware
-//app.use(express.json());
-//app.use(bodyParser.json());
-
 // Increase the limit to handle larger payloads
 app.use(bodyParser.json({ limit: '200mb' }));  // You can set this to a value you deem appropriate
 app.use(bodyParser.urlencoded({ limit: '200mb', extended: true }));
@@ -50,15 +46,6 @@ app.use('/api/events', require('./routes/eventRoutes'));
 
 // get all parent  data
 app.use('/api/deviceData', require('./routes/deviceRoutes'));
-
-// Get API for get all device data
-// app.use('/');
-
-
-// Default route for testing
-app.get('/api/dev', (req, res) => {
-  res.status(200).send('welcome to Vigil API Backend ...');
-});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
