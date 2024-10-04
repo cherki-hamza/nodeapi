@@ -1,5 +1,5 @@
 const express = require('express');
-const { getDeviceDataByParentId , testdata } = require('../controllers/deviceController');
+const { getDeviceDataByParentId } = require('../controllers/deviceController');
 
 const router = express.Router();
 
@@ -8,7 +8,6 @@ const router = express.Router();
 router.get('/:parentId', getDeviceDataByParentId);
 
 // test data
-//router.get('/:parentId/data', testdata);
+//router.get('/:parentId/', testdata);
 
 module.exports = router;
-
