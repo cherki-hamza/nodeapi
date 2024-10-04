@@ -24,7 +24,7 @@ const getDeviceDataByParentId = async (req, res) => {
 
       const deviceData = {
         parentId: parentId,
-        children: {},
+        vigilchildrens: {},
       };
 
       // Loop through each child and gather data from various collections
@@ -95,7 +95,7 @@ const getDeviceDataByParentId = async (req, res) => {
         }));
 
         // Populate the device data for each child
-        deviceData.children[child] = {
+        deviceData.vigilchildrens[child] = {
           name: child,
           device: childInfo ? childInfo.deviceName : 'Unknown Device', // Use deviceName from API response
           battery: 'Unknown', // You may need to fetch this from another source
